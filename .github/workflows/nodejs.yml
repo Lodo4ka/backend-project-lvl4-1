@@ -14,10 +14,12 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: "14.x"
-      - name: npm install, build
-        run: |
-          make setup
-          make build
+      - name: Install
+        run: make install
+        env:
+          CI: true
+      - name: Prepare
+        run: make prepare
       - name: Run linter
         run: make lint
       - name: Run tests
