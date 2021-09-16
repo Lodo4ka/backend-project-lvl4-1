@@ -3,6 +3,7 @@
 import {
   describe, beforeAll, it, expect,
 } from '@jest/globals';
+import codes from 'http-codes';
 import getApp from '../server/index.js';
 
 describe('requests', () => {
@@ -17,7 +18,7 @@ describe('requests', () => {
       method: 'GET',
       url: app.reverse('root'),
     });
-    expect(res.statusCode).toBe(200);
+    expect(res.statusCode).toBe(codes.OK);
   });
 
   it('GET 404', async () => {
@@ -25,7 +26,7 @@ describe('requests', () => {
       method: 'GET',
       url: '/wrong-path',
     });
-    expect(res.statusCode).toBe(404);
+    expect(res.statusCode).toBe(codes.NOT_FOUND);
   });
 
   afterAll(() => {

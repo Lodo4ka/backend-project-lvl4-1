@@ -4,12 +4,18 @@ block content
   table.table.table-striped
     thead
       tr
-        th= t('views.users.id')
-        th= t('views.users.email')
-        th= t('views.users.createdAt')
+        th= t('views.user.id')
+        th= t('views.user.fullName')
+        th= t('views.user.email')
+        th= t('views.user.createdAt')
+        th= t('views.user.actions')
     tbody
       each user in users
         tr
           td= user.id
+          td #{user.firstName} #{user.lastName}
           td= user.email
           td= formatDate(user.createdAt)
+          td
+            a(href=route('editUser', { id: user.id }))= t('views.user.edit.action')
+            +buttonTo(route('user', { id: user.id }), 'delete')(class="btn btn-link" value=t('views.user.delete.action'))

@@ -1,5 +1,6 @@
 // @ts-check
 
+import codes from 'http-codes';
 import getApp from '../server/index.js';
 import { getTestData, prepareData } from './helpers/index.js';
 
@@ -22,7 +23,7 @@ describe('test session', () => {
       url: app.reverse('newSession'),
     });
 
-    expect(response.statusCode).toBe(200);
+    expect(response.statusCode).toBe(codes.OK);
 
     const responseSignIn = await app.inject({
       method: 'POST',
@@ -32,7 +33,7 @@ describe('test session', () => {
       },
     });
 
-    expect(responseSignIn.statusCode).toBe(302);
+    expect(responseSignIn.statusCode).toBe(codes.FOUND);
     // после успешной аутентификации получаем куки из ответа,
     // они понадобятся для выполнения запросов на маршруты требующие
     // предварительную аутентификацию
@@ -47,7 +48,7 @@ describe('test session', () => {
       cookies: cookie,
     });
 
-    expect(responseSignOut.statusCode).toBe(302);
+    expect(responseSignOut.statusCode).toBe(codes.FOUND);
   });
 
   afterAll(async () => {
