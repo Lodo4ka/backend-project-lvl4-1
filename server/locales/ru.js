@@ -42,6 +42,20 @@ module.exports = {
           success: 'Статус успешно удалён',
         },
       },
+      task: {
+        create: {
+          error: 'Не удалось создать задачу',
+          success: 'Задача успешно создана',
+        },
+        edit: {
+          error: 'Не удалось изменить задачу',
+          success: 'Задача успешно изменена',
+        },
+        delete: {
+          error: 'Не удалось удалить задачу',
+          success: 'Задача успешно удалена',
+        },
+      },
       authError: 'Доступ запрещён! Пожалуйста, авторизируйтесь.',
     },
     layouts: {
@@ -51,6 +65,7 @@ module.exports = {
         signUp: 'Регистрация',
         signOut: 'Выход',
         taskStatuses: 'Статусы',
+        tasks: 'Задачи',
       },
     },
     views: {
@@ -71,7 +86,7 @@ module.exports = {
         actions: 'Действия',
         new: {
           submit: 'Сохранить',
-          signUp: 'Регистрация',
+          title: 'Регистрация',
         },
         edit: {
           title: 'Изменение пользователя',
@@ -100,6 +115,31 @@ module.exports = {
         },
         edit: {
           title: 'Изменение статуса',
+          action: 'Изменить',
+        },
+        delete: {
+          action: 'Удалить',
+        },
+      },
+      task: {
+        id: 'ID',
+        name: 'Наименование',
+        description: 'Описание',
+        status: 'Статус',
+        statusId: 'Статус',
+        creator: 'Автор',
+        creatorId: 'Автор',
+        executor: 'Исполнитель',
+        executorId: 'Исполнитель',
+        createdAt: 'Дата создания',
+        actions: 'Действия',
+        create: 'Создать задачу',
+        new: {
+          title: 'Создание задачи',
+          action: 'Создать',
+        },
+        edit: {
+          title: 'Изменение задачи',
           action: 'Изменить',
         },
         delete: {

@@ -4,7 +4,7 @@ import codes from 'http-codes';
 import getApp from '../server/index.js';
 import { getTestData, prepareData, signIn } from './helpers/index.js';
 
-describe('test statuses CRUD', () => {
+describe('test tasks CRUD', () => {
   let app;
   let knex;
   let models;
@@ -28,7 +28,7 @@ describe('test statuses CRUD', () => {
     it('index', async () => {
       const response = await app.inject({
         method: 'GET',
-        url: app.reverse('taskStatuses'),
+        url: app.reverse('tasks'),
       });
 
       expect(response.statusCode).toBe(codes.FOUND);
@@ -37,7 +37,7 @@ describe('test statuses CRUD', () => {
     it('new', async () => {
       const response = await app.inject({
         method: 'GET',
-        url: app.reverse('newTaskStatus'),
+        url: app.reverse('newTask'),
       });
 
       expect(response.statusCode).toBe(codes.FOUND);
@@ -46,50 +46,50 @@ describe('test statuses CRUD', () => {
     it('create', async () => {
       const response = await app.inject({
         method: 'POST',
-        url: app.reverse('taskStatuses'),
+        url: app.reverse('tasks'),
       });
 
       expect(response.statusCode).toBe(codes.FOUND);
     });
 
     it('edit', async () => {
-      const { name } = testData.taskStatuses.updated;
-      const { id: taskStatusId } = await models.taskStatus.query().findOne({ name });
+      const { name } = testData.tasks.updated;
+      const { id: taskId } = await models.task.query().findOne({ name });
 
       const response = await app.inject({
         method: 'GET',
-        url: app.reverse('editTaskStatus', { id: taskStatusId }),
+        url: app.reverse('editTask', { id: taskId }),
       });
 
       expect(response.statusCode).toBe(codes.FOUND);
     });
 
     it('update', async () => {
-      const { name } = testData.taskStatuses.updated;
-      const { id: taskStatusId } = await models.taskStatus.query().findOne({ name });
+      const { name } = testData.tasks.updated;
+      const { id: taskId } = await models.task.query().findOne({ name });
 
       const response = await app.inject({
         method: 'PATCH',
-        url: app.reverse('taskStatus', { id: taskStatusId }),
+        url: app.reverse('task', { id: taskId }),
       });
 
       expect(response.statusCode).toBe(codes.FOUND);
     });
 
     it('delete', async () => {
-      const { name } = testData.taskStatuses.deleted;
-      const { id: taskStatusId } = await models.taskStatus.query().findOne({ name });
+      const { name } = testData.tasks.deleted;
+      const { id: taskId } = await models.task.query().findOne({ name });
 
       const response = await app.inject({
         method: 'DELETE',
-        url: app.reverse('taskStatus', { id: taskStatusId }),
+        url: app.reverse('task', { id: taskId }),
       });
 
       expect(response.statusCode).toBe(codes.FOUND);
 
-      const taskStatus = await models.taskStatus.query().findById(taskStatusId);
+      const task = await models.task.query().findById(taskId);
 
-      expect(taskStatus).not.toBeUndefined();
+      expect(task).not.toBeUndefined();
     });
   });
 
@@ -105,7 +105,7 @@ describe('test statuses CRUD', () => {
     it('create', async () => {
       const response = await app.inject({
         method: 'POST',
-        url: app.reverse('taskStatuses'),
+        url: app.reverse('tasks'),
         cookies: authCookie,
         payload: {},
       });
@@ -114,12 +114,12 @@ describe('test statuses CRUD', () => {
     });
 
     it('update', async () => {
-      const { name } = testData.taskStatuses.updated;
-      const { id: taskStatusId } = await models.taskStatus.query().findOne({ name });
+      const { name } = testData.tasks.updated;
+      const { id: taskId } = await models.task.query().findOne({ name });
 
       const response = await app.inject({
         method: 'PATCH',
-        url: app.reverse('taskStatus', { id: taskStatusId }),
+        url: app.reverse('task', { id: taskId }),
         cookies: authCookie,
         payload: {},
       });
@@ -128,19 +128,15 @@ describe('test statuses CRUD', () => {
     });
 
     it('delete', async () => {
-      const taskStatusId = 1;
+      const taskId = 1;
 
       const response = await app.inject({
         method: 'DELETE',
-        url: app.reverse('taskStatus', { id: taskStatusId }),
+        url: app.reverse('taskStatus', { id: taskId }),
         cookies: authCookie,
       });
 
       expect(response.statusCode).toBe(codes.FOUND);
-
-      const taskStatus = await models.taskStatus.query().findById(taskStatusId);
-
-      expect(taskStatus).not.toBeUndefined();
     });
   });
 
@@ -156,7 +152,7 @@ describe('test statuses CRUD', () => {
     it('index', async () => {
       const response = await app.inject({
         method: 'GET',
-        url: app.reverse('taskStatuses'),
+        url: app.reverse('tasks'),
         cookies: authCookie,
       });
 
@@ -166,7 +162,7 @@ describe('test statuses CRUD', () => {
     it('new', async () => {
       const response = await app.inject({
         method: 'GET',
-        url: app.reverse('newTaskStatus'),
+        url: app.reverse('newTask'),
         cookies: authCookie,
       });
 
@@ -174,11 +170,11 @@ describe('test statuses CRUD', () => {
     });
 
     it('create', async () => {
-      const data = testData.taskStatuses.new;
+      const data = testData.tasks.new;
 
       const response = await app.inject({
         method: 'POST',
-        url: app.reverse('taskStatuses'),
+        url: app.reverse('tasks'),
         cookies: authCookie,
         payload: { data },
       });
@@ -186,18 +182,18 @@ describe('test statuses CRUD', () => {
       expect(response.statusCode).toBe(codes.FOUND);
 
       const { name } = data;
-      const taskStatus = await models.taskStatus.query().findOne({ name });
+      const task = await models.task.query().findOne({ name });
 
-      expect(taskStatus).toMatchObject(data);
+      expect(task).toMatchObject(data);
     });
 
     it('edit', async () => {
-      const { name } = testData.taskStatuses.updated;
-      const { id: taskStatusId } = await models.taskStatus.query().findOne({ name });
+      const { name } = testData.tasks.updated;
+      const { id: taskId } = await models.task.query().findOne({ name });
 
       const response = await app.inject({
         method: 'GET',
-        url: app.reverse('editTaskStatus', { id: taskStatusId }),
+        url: app.reverse('editTask', { id: taskId }),
         cookies: authCookie,
       });
 
@@ -205,39 +201,39 @@ describe('test statuses CRUD', () => {
     });
 
     it('update', async () => {
-      const data = testData.taskStatuses.new;
-      const { name } = testData.taskStatuses.updated;
-      const { id: taskStatusId } = await models.taskStatus.query().findOne({ name });
+      const data = testData.tasks.new;
+      const { name } = testData.tasks.updated;
+      const { id: taskId } = await models.task.query().findOne({ name });
 
       const response = await app.inject({
         method: 'PATCH',
-        url: app.reverse('taskStatus', { id: taskStatusId }),
+        url: app.reverse('task', { id: taskId }),
         cookies: authCookie,
         payload: { data },
       });
 
       expect(response.statusCode).toBe(codes.FOUND);
 
-      const taskStatus = await models.taskStatus.query().findById(taskStatusId);
+      const task = await models.task.query().findById(taskId);
 
-      expect(taskStatus).toMatchObject(data);
+      expect(task).toMatchObject(data);
     });
 
     it('delete', async () => {
-      const { name } = testData.taskStatuses.deleted;
-      const { id: taskStatusId } = await models.taskStatus.query().findOne({ name });
+      const { name } = testData.tasks.deleted;
+      const { id: taskId } = await models.task.query().findOne({ name });
 
       const response = await app.inject({
         method: 'DELETE',
-        url: app.reverse('taskStatus', { id: taskStatusId }),
+        url: app.reverse('task', { id: taskId }),
         cookies: authCookie,
       });
 
       expect(response.statusCode).toBe(codes.FOUND);
 
-      const taskStatus = await models.taskStatus.query().findById(taskStatusId);
+      const task = await models.task.query().findById(taskId);
 
-      expect(taskStatus).toBeUndefined();
+      expect(task).toBeUndefined();
     });
   });
 

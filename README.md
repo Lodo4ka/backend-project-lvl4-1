@@ -1,5 +1,7 @@
 ## Task manager
 
+This is another one example of task manager project from hexlet in backend JavaScript developer profession.
+
 [Demo](https://backend-project-lvl4.herokuapp.com/)
 
 ### Hexlet tests and linter status:

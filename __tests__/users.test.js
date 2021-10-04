@@ -104,6 +104,24 @@ describe('test users CRUD', () => {
 
       expect(response.statusCode).toBe(codes.BAD_REQUEST);
     });
+
+    it('delete', async () => {
+      const { email, password } = testData.users.existing;
+      const authCookie = await signIn(app, email, password);
+      const { id: userId } = await models.user.query().findOne({ email });
+
+      const response = await app.inject({
+        method: 'DELETE',
+        url: app.reverse('user', { id: userId }),
+        cookies: authCookie,
+      });
+
+      expect(response.statusCode).toBe(codes.FOUND);
+
+      const user = await models.user.query().findById(userId);
+
+      expect(user).not.toBeUndefined();
+    });
   });
 
   it('index', async () => {

@@ -1,5 +1,6 @@
 // @ts-check
 
+import path from 'path';
 import { Model } from 'objection';
 import objectionUnique from 'objection-unique';
 
@@ -10,6 +11,25 @@ const unique = objectionUnique({ fields: ['email'] });
 export default class User extends unique(Model) {
   static get tableName() {
     return 'users';
+  }
+
+  static relationMappings = {
+    createdTasks: {
+      relation: Model.HasManyRelation,
+      modelClass: path.join(__dirname, 'Task.js'),
+      join: {
+        from: 'users.id',
+        to: 'tasks.creator_id',
+      },
+    },
+    executedTasks: {
+      relation: Model.HasManyRelation,
+      modelClass: path.join(__dirname, 'Task.js'),
+      join: {
+        from: 'users.id',
+        to: 'tasks.executor_id',
+      },
+    },
   }
 
   static get jsonSchema() {
@@ -32,5 +52,9 @@ export default class User extends unique(Model) {
 
   verifyPassword(password) {
     return encrypt(password) === this.passwordDigest;
+  }
+
+  optionLabel() {
+    return `${this.firstName} ${this.lastName}`;
   }
 }

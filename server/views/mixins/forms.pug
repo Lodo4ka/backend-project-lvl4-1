@@ -8,19 +8,59 @@ mixin formFor(entity = null)
 
 mixin input(entity, propertyName, errors = {})
   - propertyErrors = _.get(errors, propertyName)
-  - classLine = 'form-control' + (_.isEmpty(propertyErrors) ? '' : ' is-invalid')
   - inputId = getInputId(propertyName)
+  - inputName = getInputName(propertyName)
   - entityName = getEntityName(entity)
   .mb-3(class=(errors[propertyName] && 'has-danger'))
     label(
       for= inputId
     )= t(`views.${entityName}.${propertyName}`)
-    input(
-      id= inputId
-      name=getInputName(propertyName)
-      class=classLine
+    input.form-control(
+      id=inputId
+      name=inputName
+      class=(!_.isEmpty(propertyErrors) && 'is-invalid')
       value=_.get(entity, propertyName, '')
     )&attributes(attributes)
+    if !_.isEmpty(propertyErrors)
+      .invalid-feedback= propertyErrors.map(({ message }) => message).join('. ')
+
+mixin textarea(entity, propertyName, errors = {})
+  - propertyErrors = _.get(errors, propertyName)
+  - inputId = getInputId(propertyName)
+  - inputName = getInputName(propertyName)
+  - entityName = getEntityName(entity)
+  .mb-3(class=(errors[propertyName] && 'has-danger'))
+    label(
+      for= inputId
+    )= t(`views.${entityName}.${propertyName}`)
+    textarea.form-control(
+      id=inputId
+      name=inputName
+      class=(!_.isEmpty(propertyErrors) && 'is-invalid')
+    )&attributes(attributes)= _.get(entity, propertyName, '')
+    if !_.isEmpty(propertyErrors)
+      .invalid-feedback= propertyErrors.map(({ message }) => message).join('. ')
+
+mixin select(entity, propertyName, options, errors = {})
+  - propertyValue = _.get(entity, propertyName, '')
+  - propertyErrors = _.get(errors, propertyName)
+  - inputId = getInputId(propertyName)
+  - inputName = getInputName(propertyName)
+  - entityName = getEntityName(entity)
+  .mb-3(class=(errors[propertyName] && 'has-danger'))
+    label(
+      for= inputId
+    )= t(`views.${entityName}.${propertyName}`)
+    select.form-control(
+      id=inputId
+      name=inputName
+      class=(!_.isEmpty(propertyErrors) && 'is-invalid')
+    )&attributes(attributes)
+      each option in options
+        option(
+          value=option.id
+          selected=(option.id === propertyValue && 'selected')
+        )= option.optionLabel()
     if !_.isEmpty(propertyErrors)
       .invalid-feedback= propertyErrors.map(({ message }) => message).join('. ')
 

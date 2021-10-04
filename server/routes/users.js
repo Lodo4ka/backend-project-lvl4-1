@@ -1,5 +1,6 @@
 // @ts-check
 
+import _ from 'lodash';
 import i18next from 'i18next';
 import codes from 'http-codes';
 
@@ -81,10 +82,19 @@ export default (app) => {
         return reply;
       }
 
-      await app.objection.models.user.query().deleteById(id);
-      req.logOut();
+      const user = await app.objection.models.user.query()
+        .withGraphJoined('[createdTasks, executedTasks]')
+        .findById(id);
+      const { createdTasks = [], executedTasks = [] } = user;
 
-      req.flash('info', i18next.t('flash.user.delete.success'));
+      if (_.isEmpty(createdTasks) && _.isEmpty(executedTasks)) {
+        await app.objection.models.user.query().deleteById(id);
+        req.logOut();
+        req.flash('info', i18next.t('flash.user.delete.success'));
+      } else {
+        req.flash('error', i18next.t('flash.user.delete.error'));
+      }
+
       reply.redirect(app.reverse('users'));
       return reply;
     });

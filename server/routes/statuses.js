@@ -1,5 +1,6 @@
 // @ts-check
 
+import _ from 'lodash';
 import i18next from 'i18next';
 import codes from 'http-codes';
 
@@ -63,7 +64,17 @@ export default (app) => {
     .delete('/statuses/:id', { preValidation: app.authenticate }, async (req, reply) => {
       const { id } = req.params;
 
-      await app.objection.models.taskStatus.query().deleteById(id);
+      const taskStatus = await app.objection.models.taskStatus.query()
+        .withGraphJoined('tasks')
+        .findById(id);
+      const { tasks = [] } = taskStatus;
+
+      if (_.isEmpty(tasks)) {
+        await app.objection.models.taskStatus.query().deleteById(id);
+        req.flash('info', i18next.t('flash.taskStatus.delete.success'));
+      } else {
+        req.flash('error', i18next.t('flash.taskStatus.delete.error'));
+      }
 
       reply.redirect(app.reverse('taskStatuses'));
       return reply;

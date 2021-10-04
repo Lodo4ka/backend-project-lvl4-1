@@ -35,5 +35,25 @@
     "deleted": {
       "name": "done"
     }
+  },
+  "tasks": {
+    "new": {
+      "statusId": 1,
+      "executorId": 3,
+      "name": "new task",
+      "description": "new task description"
+    },
+    "updated": {
+      "statusId": 1,
+      "executorId": 3,
+      "name": "updated task",
+      "description": "updated task description"
+    },
+    "deleted": {
+      "statusId": 1,
+      "executorId": 3,
+      "name": "deleted task",
+      "description": "deleted task description"
+    }
   }
 }
